@@ -67,6 +67,8 @@ public:
     // Don't call the following two functions before prepare
     const string &node_path();
 
+    string peek_node_path();
+
     const string worker_path();
 
     virtual void mount() = 0;
@@ -343,6 +345,12 @@ const string &node_entry::node_path() {
     if (_parent && _node_path.empty())
         _node_path = _parent->node_path() + '/' + _name;
     return _node_path;
+}
+
+string node_entry::peek_node_path() {
+    if (_parent)
+        return _parent->peek_node_path() + '/' + _name;
+    return "";
 }
 
 const string node_entry::worker_path() {

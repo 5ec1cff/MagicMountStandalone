@@ -83,7 +83,7 @@ bool dir_node::prepare() {
 }
 
 void dir_node::collect_module_files(const char *module, int dfd) {
-    LOGD("collect %s: %s", module, node_path().data());
+    LOGD("collect %s: %s", module, peek_node_path().data());
     auto dir = xopen_dir(xopenat(dfd, name().data(), O_RDONLY | O_CLOEXEC));
     if (!dir)
         return;

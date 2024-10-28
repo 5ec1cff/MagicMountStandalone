@@ -13,9 +13,8 @@ using namespace std;
 #define VLOGD(tag, from, to) LOGD("%-8s: %s <- %s", tag, to, from)
 
 static int bind_mount(const char *reason, const char *from, const char *to, bool move = false) {
+    VLOGD(reason, from, to);
     int ret = xmount(from, to, nullptr, (move ? MS_MOVE : MS_BIND) | MS_REC, nullptr);
-    if (ret == 0)
-        VLOGD(reason, from, to);
     return ret;
 }
 
@@ -154,13 +153,13 @@ void tmpfs_node::mount() {
     }
     if (!isa<tmpfs_node>(parent())) {
         auto worker_dir = worker_path();
-        mkdirs(worker_dir.data(), 0);
-        bind_mount(replace() ? "replace" : "move", worker_dir.data(), worker_dir.data());
+        xmkdirs(worker_dir.data(), 0);
+        bind_mount(replace() ? "replace" : "bind", worker_dir.data(), worker_dir.data());
         clone_attr(exist() ? node_path().data() : parent()->node_path().data(), worker_dir.data());
         dir_node::mount();
         bind_mount(replace() ? "replace" : "move", worker_dir.data(), node_path().data(), true);
-        xmount(nullptr, node_path().data(), nullptr, MS_REMOUNT | MS_RDONLY, nullptr);
         xmount(nullptr, node_path().data(), nullptr, MS_PRIVATE, nullptr);
+        // we shouldn't make ro here
     } else {
         const string dest = worker_path();
         // We don't need another layer of tmpfs if parent is tmpfs
@@ -213,6 +212,8 @@ void load_modules(const vector<module_info> &module_list) {
         }
         root->prepare();
         root->mount();
+    } else {
+        LOGI("nothing to mount");
     }
 }
 

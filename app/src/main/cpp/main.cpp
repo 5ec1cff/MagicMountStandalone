@@ -74,6 +74,10 @@ int main(int argc, char **argv) {
         return 1;
     }
     handle_modules();
+    LOGI("mount done");
+    if (mount(nullptr, tmp_path.c_str(), nullptr, MS_REMOUNT | MS_RDONLY, nullptr) == -1) {
+        PLOGE("make ro");
+    }
     if (umount2(tmp_path.c_str(), MNT_DETACH) == -1) {
         PLOGE("umount tmp");
     }

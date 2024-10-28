@@ -6,7 +6,7 @@
 #include <string>
 
 #ifndef LOG_TAG
-# define LOG_TAG "Demo"
+# define LOG_TAG "MagicMount"
 #endif
 
 #ifndef NDEBUG

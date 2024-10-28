@@ -180,15 +180,19 @@ int mkdirs(const char *path, mode_t mode) {
         if (*p == '/') {
             *p = '\0';
             if (mkdir(buf, mode) == -1) {
-                if (errno != EEXIST)
+                if (errno != EEXIST) {
+                    PLOGE("mkdir %s", buf);
                     return -1;
+                }
             }
             *p = '/';
         }
     }
     if (mkdir(buf, mode) == -1) {
-        if (errno != EEXIST)
+        if (errno != EEXIST) {
+            PLOGE("mkdir %s", buf);
             return -1;
+        }
     }
     return 0;
 }

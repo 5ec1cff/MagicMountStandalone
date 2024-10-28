@@ -84,6 +84,7 @@ void cp_afc(const char *src, const char *dest);
 void clone_attr(const char *src, const char *dest);
 
 int mkdirs(const char *path, mode_t mode);
+int xmkdirs(const char *path, mode_t mode);
 
 // mount scan
 
